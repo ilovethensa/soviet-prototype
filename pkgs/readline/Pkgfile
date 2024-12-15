@@ -1,0 +1,11 @@
+name=readline
+version=8.2
+release=1
+source=(https://ftp.gnu.org/gnu/$name/$name-$version.tar.gz)
+CC=musl-gcc
+build() {
+    cd $name-$version
+	./configure $CONFIGFLAGS
+	make -j14
+	make DESTDIR=$PKG prefix=/ lib=lib install
+}

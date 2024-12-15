@@ -1,0 +1,17 @@
+drwxr-xr-x	root/root	include/
+drwxr-xr-x	root/root	include/rpcsvc/
+-rw-r--r--	root/root	include/rpcsvc/yp.h
+-rw-r--r--	root/root	include/rpcsvc/yp.x
+-rw-r--r--	root/root	include/rpcsvc/yp_prot.h
+-rw-r--r--	root/root	include/rpcsvc/ypclnt.h
+-rw-r--r--	root/root	include/rpcsvc/yppasswd.h
+-rw-r--r--	root/root	include/rpcsvc/yppasswd.x
+-rw-r--r--	root/root	include/rpcsvc/ypupd.h
+drwxr-xr-x	root/root	lib/
+-rw-r--r--	root/root	lib/libnsl.a
+-rwxr-xr-x	root/root	lib/libnsl.la
+lrwxrwxrwx	root/root	lib/libnsl.so -> libnsl.so.3.0.0
+lrwxrwxrwx	root/root	lib/libnsl.so.3 -> libnsl.so.3.0.0
+-rwxr-xr-x	root/root	lib/libnsl.so.3.0.0
+drwxr-xr-x	root/root	lib/pkgconfig/
+-rw-r--r--	root/root	lib/pkgconfig/libnsl.pc

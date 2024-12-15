@@ -1,0 +1,10 @@
+name=libelf
+version=0.192.1
+release=1
+source=(https://github.com/arachsys/libelf/archive/refs/tags/v$version.tar.gz)
+CC=musl-gcc
+build() {
+    cd $name-$version
+	make -j14
+	make DESTDIR=$PKG/ install
+}

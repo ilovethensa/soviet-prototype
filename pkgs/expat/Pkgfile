@@ -1,0 +1,12 @@
+name=expat
+version=2.6.4
+release=1
+source=(https://github.com/libexpat/libexpat/releases/download/R_2_6_4/expat-2.6.4.tar.gz)
+keep_static=1
+
+build() {
+    cd $name-$version
+    ./configure $CONFIGFLAGS --prefix=/
+    make -j14
+    make DESTDIR=$PKG install
+}

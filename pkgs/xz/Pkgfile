@@ -1,0 +1,15 @@
+name=xz
+version=5.4.4
+release=1
+source=(https://tukaani.org/$name/$name-$version.tar.$name)
+keep_static=1
+CC=musl-gcc
+CFLAGS="${CFLAGS//-static/}"
+CXXFLAGS=$CFLAGS
+build() {
+    cd $name-$version
+	./autogen.sh --no-po4a --no-doxygen
+	./configure $CONFIGFLAGS --disable-doc
+	make -j14
+	make DESTDIR=$PKG install
+}

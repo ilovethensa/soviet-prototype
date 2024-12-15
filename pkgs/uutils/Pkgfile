@@ -1,0 +1,26 @@
+name=uutils
+version=0.0.28
+release=1
+source=(https://github.com/uutils/coreutils/archive/refs/tags/$version.tar.gz)
+CFLAGS="-static" 
+CXXFLAGS=$CFLAGS
+build() {
+    cd coreutils-$version
+
+    RUSTFLAGS='-C target-feature=+crt-static -C link-self-contained=yes -Clink-arg=-static' $CARGO build --target=x86_64-unknown-linux-musl
+
+    # Copy the final binary
+    mkdir $PKG/usr/bin -p
+    cp target/x86_64-unknown-linux-musl/debug/coreutils $PKG/usr/bin/coreutils
+
+    TOOLS=(
+        base32 base64 basenc basename cat cksum comm cp csplit cut date dd df dir dircolors dirname echo env expand expr factor false fmt fold hashsum head join link ln ls mkdir mktemp more mv nl numfmt nproc od paste pr printenv printf ptx pwd readlink realpath rm rmdir seq shred shuf sleep sort split sum sync tac tail tee test tr true truncate tsort unexpand uniq vdir wc whoami yes
+        arch chgrp chmod chown chroot du groups hostid hostname id install kill logname mkfifo mknod nice nohup pathchk pinky sleep stat stdbuf timeout touch tty uname unlink uptime users who
+    )
+
+    # Create symbolic links for each tool
+    for tool in "${TOOLS[@]}"; do
+        rm -rf $PKG/usr/bin/$tool
+        ln -s coreutils $PKG/usr/bin/$tool
+    done
+}

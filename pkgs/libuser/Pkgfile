@@ -1,0 +1,15 @@
+name=libuser
+version=0.64
+release=1
+source=(https://pagure.io/libuser/archive/libuser-0.64/libuser-libuser-$version.tar.gz)
+CFLAGS="--sysroot=$ROOT -static -Wl,--dynamic-linker=/lib/ld-linux-x86-64.so.2 -fPIC -fPIE -I/include -I$ROOT/include -L/lib -Wno-error -I$ROOT/lib/security"
+CXXFLAGS=$CFLAGS
+build() {
+    cd libuser-libuser-$version
+    sh ./autogen.sh
+    sed -i 's/sgml2txt/echo/g' ./docs/Makefile.am ./docs/Makefile.in
+    sed -i 's/sgml2html/echo/g' ./docs/Makefile.am ./docs/Makefile.in
+    ./configure $CONFIGFLAGS --enable-gtk-doc --disable-gtk-doc-html --disable-gtk-doc-pdf --disable-nls --without-audit --without-selinux
+    make -j14
+    make DESTDIR=$PKG install
+}

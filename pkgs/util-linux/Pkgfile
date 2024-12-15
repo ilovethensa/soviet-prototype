@@ -1,0 +1,16 @@
+name=util-linux
+version=2.40
+release=1
+source=(https://www.kernel.org/pub/linux/utils/util-linux/v$version/$name-$version.tar.xz)
+CFLAGS="-Wl,--dynamic-linker=/lib/ld-linux-x86-64.so.2 -fPIC -fPIE -I$ROOT/include -L$ROOT/lib -Wno-error -pipe" 
+CXXFLAGS=$CFLAGS
+CPPFLAGS=$CFLAGS
+build() {
+    cd $name-$version
+    ./configure $CONFIGFLAGS --enable-libmount --enable-mount --enable-login
+    make -j14
+    make DESTDIR=$PKG install
+    mkdir $PKG/lib/ || echo "didnt create /lib"
+    mkdir $PKG/bin/ || echo "didnt create /bin"
+    ln -s /sbin/sulogin $PKG/usr/bin/sulogin
+}

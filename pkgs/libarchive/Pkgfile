@@ -1,0 +1,12 @@
+name=libarchive
+version=3.7.7
+release=1
+source=(https://github.com/libarchive/libarchive/releases/download/v$version/libarchive-$version.tar.gz)
+CFLAGS="${CFLAGS//-static/} -fPIC"
+CXXFLAGS=$CFLAGS
+build() {
+    cd $name-$version
+	./configure $CONFIGFLAGS --prefix=/ --without-xml2 --without-openssl --disable-acl --without-lz4
+	make -j14
+	make DESTDIR=$PKG install
+}

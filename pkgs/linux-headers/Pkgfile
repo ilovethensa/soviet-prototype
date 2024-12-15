@@ -1,0 +1,14 @@
+name=linux-headers
+version=6.12.4
+release=1
+source=(https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-$version.tar.xz)
+	
+build() {
+    cd linux-$version
+	make -j14 mrproper
+	make -j14 headers
+	find usr/include -name '.*' -delete
+	rm usr/include/Makefile
+	mkdir -p $PKG/include
+	cp -rv usr/include/* $PKG/include
+}

@@ -1,0 +1,20 @@
+name=brush
+version=0.2.13
+release=1
+source=(https://github.com/reubeno/brush/archive/refs/tags/brush-shell-v$version.tar.gz
+	bashrc
+	profile)
+
+build() {
+    cd brush-brush-shell-v$version
+    $CARGO build --target=x86_64-unknown-linux-musl
+    mkdir $PKG/bin -p
+    cp target/x86_64-unknown-linux-musl/debug/brush $PKG/bin
+    ln -sv brush $PKG/bin/sh
+}
+
+post_build() {
+	install -d $PKG/etc
+	install -m644 $SRC/bashrc $PKG/etc
+	install -m644 $SRC/profile $PKG/etc
+}

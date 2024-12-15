@@ -1,0 +1,13 @@
+name=zlib
+version=1.3.1
+release=1
+source=(https://$name.net/$name-$version.tar.xz)
+keep_static=1
+CFLAGS="$CFLAGS -fPIC"
+CXXFLAGS=$CFLAGS
+build() {
+	cd $name-$version
+	./configure --prefix=/ --eprefix=/ --localstatedir=/var
+	make -j14
+	make DESTDIR=$PKG install
+}

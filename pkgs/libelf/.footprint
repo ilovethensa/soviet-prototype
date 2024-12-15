@@ -1,0 +1,9 @@
+drwxr-xr-x	root/root	include/
+-rw-r--r--	root/root	include/gelf.h
+-rw-r--r--	root/root	include/libelf.h
+-rw-r--r--	root/root	include/nlist.h
+drwxr-xr-x	root/root	lib/
+-rw-r--r--	root/root	lib/libelf.a
+lrwxrwxrwx	root/root	lib/libelf.so -> libelf.so.1.0.192
+lrwxrwxrwx	root/root	lib/libelf.so.1 -> libelf.so.1.0.192
+-rwxr-xr-x	root/root	lib/libelf.so.1.0.192

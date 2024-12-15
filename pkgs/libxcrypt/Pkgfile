@@ -1,0 +1,17 @@
+name=libxcrypt
+version=4.4.36
+release=1
+source=(https://github.com/besser82/libxcrypt/releases/download/v$version/$name-$version.tar.xz)
+CFLAGS="${CFLAGS//-static/} -Wno-error"
+CXXFLAGS=$CFLAGS
+CC=musl-gcc
+build() {
+    cd $name-$version
+    ./configure $CONFIGFLAGS                \
+                --enable-hashes=strong,glibc \
+                --enable-obsolete-api=no     \
+                --enable-static             \
+                --disable-failure-tokens
+    make -j14
+    make -j14 DESTDIR=$PKG install
+}

@@ -1,0 +1,12 @@
+name=libseccomp
+version=2.5.5
+release=1
+source=(https://github.com/seccomp/libseccomp/releases/download/v$version/libseccomp-$version.tar.gz)
+CFLAGS="${CFLAGS//-static/}"
+CXXFLAGS=$CFLAGS
+build() {
+    cd $name-$version
+	./configure $CONFIGFLAGS
+	make -j14
+	make DESTDIR=$PKG install
+}

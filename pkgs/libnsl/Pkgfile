@@ -1,0 +1,12 @@
+name=libnsl
+version=2.0.1
+release=1
+source=(https://github.com/thkukuk/libnsl/releases/download/v$version/libnsl-$version.tar.xz)
+CFLAGS="${CFLAGS//-static/}"
+CXXFLAGS=$CFLAGS
+build() {
+    cd $name-$version
+    ./configure --with-sysroot=$ROOT --prefix=/
+	make
+	make DESTDIR=$PKG install
+}

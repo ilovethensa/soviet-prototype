@@ -1,0 +1,16 @@
+name=kmod
+version=33
+release=1
+source=(https://github.com/kmod-project/kmod/archive/ccc26d6bf4ef4db9f4fcca3419f90ec0ccc65f88.zip)
+build_opt="--without-openssl --with-xz --with-zlib"
+CFLAGS="${CFLAGS//-static/}"
+CXXFLAGS=$CFLAGS
+build() {
+    cd $name-ccc26d6bf4ef4db9f4fcca3419f90ec0ccc65f88
+    meson setup -Ddocs=false -Dmanpages=false -Dzstd=disabled -Dopenssl=disabled -Dzlib=disabled -Dxz=disabled builddir/
+    meson compile -C builddir/
+    DESTDIR=$PKG meson install -C builddir/
+    #cp -rf $PKG/usr/* $PKG/
+    #cp -rf $PKG/sbin/* $PKG/bin
+    #rm -rf $PKG/usr $PKG/sbin
+}

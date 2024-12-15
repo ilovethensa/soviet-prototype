@@ -1,0 +1,14 @@
+name=libbpf
+version=1.5.0
+release=1
+source=(https://github.com/libbpf/libbpf/archive/refs/tags/v$version.tar.gz)
+keep_static=1
+
+build() {
+    cd $name-$version/src
+	make -j14
+	make DESTDIR=$PKG PREFIX=/ install
+	mkdir $PKG/lib | echo "didnt create /lib"
+	cp -rf $PKG/lib64/* $PKG/lib/
+	rm -rf $PKG/lib64
+}

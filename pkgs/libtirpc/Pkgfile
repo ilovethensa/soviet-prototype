@@ -1,0 +1,13 @@
+name=libtirpc
+version=1.3.6
+release=1
+source=(https://downloads.sourceforge.net/libtirpc/$name-$version.tar.bz2)
+CC=musl-gcc
+CFLAGS="${CFLAGS//-static/}"
+CXXFLAGS=$CFLAGS
+build() {
+    cd $name-$version
+	./configure $CONFIGFLAGS --disable-gssapi --disable-static
+	make -j14
+	make DESTDIR=$PKG install
+}

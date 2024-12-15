@@ -1,0 +1,23 @@
+name=libcap
+version=2.69
+release=1
+source=(https://www.kernel.org/pub/linux/libs/security/linux-privs/${name}2/$name-$version.tar.xz)
+CFLAGS="${CFLAGS//-static/}"
+CXXFLAGS=$CFLAGS
+build() {
+    cd $name-$version
+	sed -i '/install -m.*STA/d' libcap/Makefile
+    sed -i 's|$(shell if \[ -f /usr/include/security/pam_modules.h \]; then echo $(SHARED) ; else echo no ; fi)|no|' Make.Rules
+    sed -i 's|prefix=/usr|prefix=/|' Make.Rules
+    sed -i 's|$(exec_prefix)|/|g' Make.Rules  
+    sed -i 's|$(prefix)|/|g' Make.Rules       
+    sed -i 's|$(prefix)/share|/share|g' Make.Rules 
+	make PAM_CAP=no PREFIX=/
+	make PREFIX=/ DESTDIR=$PKG install
+    mkdir $PKG/lib/
+    mkdir $PKG/bin/
+    mv $PKG/lib64/* $PKG/lib
+    mv $PKG/sbin/* $PKG/bin
+    rm -rf $PKG/lib64/
+    rm -rf $PKG/sbin/
+}

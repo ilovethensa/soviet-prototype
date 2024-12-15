@@ -1,0 +1,22 @@
+drwxr-xr-x	root/root	include/
+drwxr-xr-x	root/root	include/bpf/
+-rw-r--r--	root/root	include/bpf/bpf.h
+-rw-r--r--	root/root	include/bpf/bpf_core_read.h
+-rw-r--r--	root/root	include/bpf/bpf_endian.h
+-rw-r--r--	root/root	include/bpf/bpf_helper_defs.h
+-rw-r--r--	root/root	include/bpf/bpf_helpers.h
+-rw-r--r--	root/root	include/bpf/bpf_tracing.h
+-rw-r--r--	root/root	include/bpf/btf.h
+-rw-r--r--	root/root	include/bpf/libbpf.h
+-rw-r--r--	root/root	include/bpf/libbpf_common.h
+-rw-r--r--	root/root	include/bpf/libbpf_legacy.h
+-rw-r--r--	root/root	include/bpf/libbpf_version.h
+-rw-r--r--	root/root	include/bpf/skel_internal.h
+-rw-r--r--	root/root	include/bpf/usdt.bpf.h
+drwxr-xr-x	root/root	lib/
+-rw-r--r--	root/root	lib/libbpf.a
+lrwxrwxrwx	root/root	lib/libbpf.so -> libbpf.so.1
+lrwxrwxrwx	root/root	lib/libbpf.so.1 -> libbpf.so.1.5.0
+-rwxr-xr-x	root/root	lib/libbpf.so.1.5.0
+drwxr-xr-x	root/root	lib/pkgconfig/
+-rw-r--r--	root/root	lib/pkgconfig/libbpf.pc

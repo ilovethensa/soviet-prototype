@@ -1,0 +1,12 @@
+name=macchina
+version=6.4.0
+release=1
+source=(https://github.com/Macchina-CLI/macchina/archive/refs/tags/v$version.tar.gz)
+CFLAGS="-static" 
+CXXFLAGS=$CFLAGS
+build() {
+    cd $name-$version
+    $CARGO build --target=x86_64-unknown-linux-musl
+    mkdir $PKG/bin -p
+    cp target/x86_64-unknown-linux-musl/debug/macchina $PKG/bin
+}

@@ -1,0 +1,70 @@
+name=glibc
+version=2.40
+release=1
+source=(
+    https://ftp.gnu.org/gnu/$name/$name-$version.tar.xz
+    genlocales
+)
+keep_static=0  # No static linking
+
+build_opt=(
+    --prefix=/usr
+    --disable-werror
+    --disable-profile
+    --enable-kernel=3.2
+    --enable-stack-protector=strong
+    --enable-multi-arch
+    --disable-nscd
+    --enable-shared  # Ensure shared libraries are built
+    libc_cv_include_x86_isa_level=no
+)
+
+CFLAGS="-O2 -pipe"
+CXXFLAGS="$CFLAGS"
+
+build() {
+    cd $name-$version
+
+    # Create a build directory
+    mkdir -v build
+    cd build
+
+    # Configure the build
+    ../configure "${build_opt[@]}" \
+        --libexecdir=/lib \
+        libc_cv_slibdir=/lib
+
+    # Compile the package
+    make -j$(nproc)
+
+    # Skip test installation in the Makefile
+    sed '/test-installation/s@$(PERL)@echo not running@' -i ../Makefile
+
+    # Install the compiled package
+    make install_root=$PKG install
+
+    # Ensure correct directory structure
+    install -d $PKG/lib/locale
+    install -d $PKG/etc/ld.so.conf.d
+
+    # Install locale configuration files
+    sed -e '1,3d' -e 's|/| |g' -e 's|\\| |g' -e 's|^|#|g' \
+        $SRC/$name-$version/localedata/SUPPORTED > $PKG/etc/locales
+    install -Dm755 $SRC/genlocales $PKG/bin/genlocales
+
+    # Generate the default locale (C.UTF-8)
+    LC_ALL=C ./elf/ld.so --library-path . ./bin/localedef \
+        --force --quiet \
+        --inputfile=../localedata/locales/C \
+        --charmap=../localedata/charmaps/UTF-8 \
+        $PKG/lib/locale/C.UTF-8 || true
+
+    # Remove temporary locale entry
+    sed -i '/#C\.UTF-8 /d' $PKG/etc/locales
+
+    # Remove unused binaries (shipped with tzdata)
+    rm -fv $PKG/bin/zdump $PKG/sbin/zic $PKG/bin/tzselect
+    cp -a $PKG/usr/* $PKG/
+    cp -a $PKG/sbin/* $PKG/bin
+    rm -rfv $PKG/{sbin,usr}
+}

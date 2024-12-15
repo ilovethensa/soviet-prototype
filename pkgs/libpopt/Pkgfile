@@ -1,0 +1,10 @@
+name=libpopt
+version=1.19
+release=1
+source=(https://ftp.osuosl.org/pub/rpm/popt/releases/popt-1.x/popt-$version.tar.gz)
+build() {
+    cd popt-$version
+    ./configure $CONFIGFLAGS
+    make -j14
+    make DESTDIR=$PKG install
+}

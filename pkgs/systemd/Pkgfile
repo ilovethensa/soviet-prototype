@@ -1,0 +1,84 @@
+name=systemd
+version=257
+release=1
+source=(https://github.com/systemd/systemd/archive/v$version/$name-$version.tar.gz
+cross-compilation.conf)
+CFLAGS="--sysroot=$ROOT -Wl,--dynamic-linker=/lib/ld-linux-x86-64.so.2 -I$ROOT/include -L/lib -Wl,-rpath,/lib -w -Wno-error"
+CXXFLAGS=$CFLAGS
+build() {
+    # Modify cross-compilation configuration
+    sed -i "/^\[binaries\]$/s:$::" cross-compilation.conf
+    sed -i "/^\[properties\]$/s:$::" cross-compilation.conf
+
+    # Replace placeholders with updated values
+    sed -i "s|@TARGET_FCFLAGS@||g" cross-compilation.conf
+    sed -i "s|@TARGET_CFLAGS@|'-Os', '-Wno-error', '--sysroot=$ROOT', '-Wl,--dynamic-linker=/lib/ld-linux-x86-64.so.2'|g" cross-compilation.conf
+    sed -i "s|@TARGET_LDFLAGS@||g" cross-compilation.conf
+    sed -i "s|@TARGET_CXXFLAGS@|'-Os', '-Wno-error', '--sysroot=$ROOT', '-Wl,--dynamic-linker=/lib/ld-linux-x86-64.so.2'|g" cross-compilation.conf
+    sed -i "s|@BR2_CMAKE@|cmake|g" cross-compilation.conf
+    sed -i "s|@STAGING_DIR@|$ROOT|g" cross-compilation.conf
+    sed -i "s|@STATIC@|false|g" cross-compilation.conf
+
+    # Additional replacements
+    sed -i "s|PKG_CONFIG_BINARY|${ROOT}/usr/bin/pkgconf|g" cross-compilation.conf
+
+    cd $name-$version
+    mkdir build
+    cd build
+
+    # Configure build with Meson
+    meson setup \
+        -Dmode=release \
+        -Dlink-udev-shared=true \
+        -Dlink-systemctl-shared=true \
+        -Dlink-networkd-shared=true \
+        -Dlink-timesyncd-shared=true \
+        -Dlink-journalctl-shared=true \
+        -Dlink-boot-shared=true \
+        -Dlink-portabled-shared=true \
+        -Dinitrd=true \
+        -Dnscd=false \
+        -Dvmspawn=true \
+        -Dbootloader=true \
+        -Ddefault-dnssec=no \
+        -Dinstall-tests=false \
+        -Dldconfig=false \
+        -Drpmmacrosdir=no \
+        -Dpamconfdir=/etc/pam.d \
+        -Daudit=false \
+        -Dbzip2=false \
+        -Dzstd=false \
+        -Dlz4=false \
+        -Dzlib=false \
+        -Dgcrypt=false \
+        -Dacl=false \
+        -Delfutils=false \
+        -Dlibcryptsetup=false \
+        -Dlibcryptsetup-plugins=false \
+        -Dopenssl=false \
+        -Dtpm2=false \
+        -Didn=false \
+        -Dlibidn=false \
+        -Dlibidn2=false \
+        -Dpcre2=false \
+        -Dlibiptc=false \
+        -Dpam=false \
+        -Dxkbcommon=false \
+        -Dgnutls=false \
+        -Dlibcurl=false \
+        --default-library=static \
+        -Ddefault-locale='C.UTF-8' \
+        -Dfallback-hostname='sovietlinux' \
+        -Dsbat-distro-summary='Soviet Linux' \
+        -Dsbat-distro-version='Vanguard' \
+        -Dsbat-distro-url='https://sovietlinux.org' \
+        ..
+
+    # Build and install
+    ninja
+    DESTDIR=$PKG ninja install
+
+    # Post-installation steps
+    #cp -rf $PKG/usr/* $PKG/
+    #rm -rf $PKG/usr
+}
